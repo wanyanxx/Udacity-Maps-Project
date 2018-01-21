@@ -1,0 +1,75 @@
+<!DOCTYPE  html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Udacity Map Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+</head>
+<style>
+    html,body
+        {
+        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        height: 100%;
+        position: relative;
+      }
+     
+
+      #map {
+        bottom:0px;
+        height: 100%;
+        left: 362px;
+        position: absolute;
+        right: 0px;
+      }
+
+      .options-box {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        height: 100%;
+        line-height: 35px;
+        padding: 10px 10px 30px 10px;
+        text-align: left;
+        width: 340px;
+      } 
+      #pano {
+        width: 200px;
+        height: 200px;
+      }
+</style>
+<body>
+    <div class="containter">
+        <div class="options-box">
+            <h3>Udacity Map Project</h3>
+            <div>
+                <input id="input-text" type="text" placeholder="请在这里输入地址" data-bind="textInput: searchText">
+            </div>
+            <div>
+                <input id="btn-saerch" type="button" value="Search" data-bind="click:search">
+                <input id="btn-reset" type="button" value="Reset" data-bind="click:search">
+            </div>
+        </div>
+        <div class="place-list">
+                <ol data-bind="foreach:filterPlaces">
+                    <li>
+                        <!--<span data-bind="text:$index"></span> -->
+                        <a href="javascript:void(0)" data-bind="text:name,click:$parent.placeClick"></a>
+                    </li>
+                </ol>
+            </div>
+        <div id="map"></div>
+    </div>
+    
+    <script src="js/main.js"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6AVMPN4qk_CnqAebajpWmKk5RZOkav2U&libraries=geometry&v=3&callback=initMap"></script>
+    
+</body>
+</html>
