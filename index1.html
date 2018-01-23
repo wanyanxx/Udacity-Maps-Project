@@ -58,11 +58,8 @@
             </div>
         </div>
         <div class="place-list">
-                <ol data-bind="foreach:filterPlaces">
-                    <li>
-                        <!--<span data-bind="text:$index"></span> -->
-                        <a href="javascript:void(0)" data-bind="text:name,click:$parent.placeClick"></a>
-                    </li>
+                <ol data-bind="foreach:placeList">
+                    <li  data-bind="text:title,click:$parent.placeClick"></li>
                 </ol>
             </div>
         <div id="map"></div>
