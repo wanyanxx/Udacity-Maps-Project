@@ -1,10 +1,10 @@
 var initialPlaces = [
-    { title: 'Park Ave Penthouse', location: { lat: 40.7713024, lng: -73.9632393 } },
-    { title: 'Chelsea Loft', location: { lat: 40.7444883, lng: -73.9949465 } },
-    { title: 'Union Square Open Floor Plan', location: { lat: 40.7347062, lng: -73.9895759 } },
-    { title: 'East Village Hip Studio', location: { lat: 40.7281777, lng: -73.984377 } },
-    { title: 'TriBeCa Artsy Bachelor Pad', location: { lat: 40.7195264, lng: -74.0089934 } },
-    { title: 'Chinatown Homey Space', location: { lat: 40.7180628, lng: -73.9961237 } }
+    { title: 'Park Ave Penthouse', location: { lat: 40.7713024, lng: -73.9632393 },id:1 },
+    { title: 'Chelsea Loft', location: { lat: 40.7444883, lng: -73.9949465 },id:2 },
+    { title: 'Union Square Open Floor Plan', location: { lat: 40.7347062, lng: -73.9895759 } ,id:3},
+    { title: 'East Village Hip Studio', location: { lat: 40.7281777, lng: -73.984377 } ,id:4},
+    { title: 'TriBeCa Artsy Bachelor Pad', location: { lat: 40.7195264, lng: -74.0089934 },id:5 },
+    { title: 'Chinatown Homey Space', location: { lat: 40.7180628, lng: -73.9961237 },id:6 }
 ];
 var Place = function (data) {
     this.title = data.title;
@@ -13,9 +13,10 @@ var Place = function (data) {
 var PlaceViewModel = function () {
     var self = this;
     var map;
-    var infoWindow;
+    var infowindow = new google.maps.InfoWindow();
     this.places = ko.observableArray([]);
     this.markers = ko.observableArray([]);
+    this.id = ko.observableArray([]);
 
     this.searchText = ko.observable('');
 
@@ -46,12 +47,13 @@ var PlaceViewModel = function () {
         // Constructor creates a new map - only center and zoom are required.
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 40.7413549, lng: -73.9980244 },
-            zoom: 13
+            zoom: 13,
+            
         });
-        var infowindow = new google.maps.InfoWindow();
+        
         
     }
-
+    
     function showInfowindow(marker, infowindow) {
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
@@ -75,7 +77,7 @@ var PlaceViewModel = function () {
                         }
                     };
                     var panorama = new google.maps.StreetViewPanorama(
-                        document.getElementById('pano'), panoramaOptions);
+                        document.getElementById('pano'), panoOptions);
                 } else {
                     infowindow.setContent('div' + marker.title + '</div>' + '<div>No Street View Found</div>');
                 }
@@ -103,6 +105,7 @@ var PlaceViewModel = function () {
                 setTimeout(function () {
                     marker.setAnimation(null);
                 }, 1400);
+                
                 showInfowindow(this, infowindow);
             });
         })
