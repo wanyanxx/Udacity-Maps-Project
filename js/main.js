@@ -9,51 +9,95 @@ var initialPlaces = [
 var Place = function (data) {
     this.title = data.title;
     this.location = data.location;
+    this.id = data.id;
 }
+
+  function toggleBounce(marker){
+      if(marker.getAnimation !== null){
+          marker.setAnimation(null);
+      }else{
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+  }
+
 var PlaceViewModel = function () {
     var self = this;
     var map;
     var infowindow = new google.maps.InfoWindow();
-    this.places = ko.observableArray([]);
-    this.markers = ko.observableArray([]);
-    this.id = ko.observableArray([]);
-
+    this.places = ko.observableArray();
+    self.markerList = ko.observableArray();
+    this.id = ko.observableArray();
     this.searchText = ko.observable('');
-
     //获取place列表
     this.placeList = ko.observableArray([]);
     initialPlaces.forEach(function (placeItem) {
         self.placeList.push(new Place(placeItem))
     })
-    //点击place列表，使得marker跳动并显示infowindow
-    this.currentPlace = ko.observable(this.placeList()[0]);
-    this.placeClick = function (item) {
-        var currentMarkerId = item.id;
-        self.markers().forEach(function (item) {
-            if (currentMarkerId == item.id) {
-                item.marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function () {
-                    item.marker.setAnimation(null);
-                }, 1400);
-                showInfowindow(item.id, item.marker);
+    this.filter = function(){
+        console.log(this.searchText());
+        let tempPlace = null;
+        if(this.searchText() === 'park'){
+            for (let i = 0; i < initialPlaces.length; i++) {
+               if (initialPlaces[i].title === 'Park Ave Penthouse') {
+                   for(let j=0;j<self.markerList().length;j++){
+                     if (initialPlaces[i].id !== self.markerList()[j].id) {
+                        //  console.log(self.markerList()[j]);
+                        self.markerList()[j].setVisible(false);
+                        self.placeList.pop(self.markerList()[j]);
+                     }
+                   }
+               }
+                
             }
-        })
+        }else if(this.searchText() === ''){
+            initialPlaces.forEach(function (placeItem) {
+                self.placeList.push(new Place(placeItem))
+            })
+            for (let i = 0; i < self.markerList().length; i++) {
+                self.markerList()[i].setVisible(true);
+            }
+        }
+    }
+    //点击place列表，使得marker跳动并显示infowindow
+    this.placeClick = function (place) {
+       for (var i = 0; i < self.markerList().length; i++) {
+           if( self.markerList()[i].id == place.id){
+            var that = self.markerList()[i];
+            self.markerList()[i].setAnimation(google.maps.Animation.BOUNCE);
+            showInfowindow(that,infowindow);
+            setTimeout(function(){
+                that.setAnimation(null);
+            }.bind(that),1400)
+           }
+       }
     };
-    //search place
-    this.search = function () { };
-    //reset
-    this.reset = function () { };
+
+    function addItemMarkers(place) {
+            var position = place.location;
+            var title = place.title;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: position,
+                title: title,
+                animation: google.maps.Animation.DROP,
+            });
+            // self.markers.push(marker);
+            marker.addListener("click",function(){
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                showInfowindow(marker,infowindow);
+                setTimeout(function(){
+                    marker.setAnimation(null);
+                }.bind(marker),1400)
+            });
+    }
+
     function initMap() {
         // Constructor creates a new map - only center and zoom are required.
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 40.7413549, lng: -73.9980244 },
-            zoom: 13,
-            
-        });
-        
-        
-    }
-    
+            zoom: 13,           
+        });       
+    }   
     function showInfowindow(marker, infowindow) {
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
@@ -87,34 +131,34 @@ var PlaceViewModel = function () {
         };
     };
     function addMarkers(places) {
-        places.forEach(function (place) {
+        var myObservableArray = ko.observableArray(); 
+         places.forEach(function (place) {
             var position = place.location;
             var title = place.title;
             var marker = new google.maps.Marker({
                 map: map,
                 position: position,
-                title: title,
+                title: title,   
                 animation: google.maps.Animation.DROP,
-                
+                id:place.id,
             });
-            self.markers.push(marker);
-            marker.addListener("click", function () {
-                var that = this;
-                that.setAnimation(google.maps.Animation.BOUNCE);
-
-                setTimeout(function () {
+            self.markerList.push(marker);
+            marker.addListener("click",function(){
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                showInfowindow(marker,infowindow);
+                setTimeout(function(){
                     marker.setAnimation(null);
-                }, 1400);
-                
-                showInfowindow(this, infowindow);
+                }.bind(marker),1400)
             });
         })
     }
+
+  
     //显示地图
     initMap();
     //显示markers
     addMarkers(initialPlaces);
-};
+}
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
 }
