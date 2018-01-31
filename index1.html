@@ -42,10 +42,11 @@
 </style>
 <body>
     <div class="containter">
-        <div class="options-box">
+        <div class="options-box hidden-phone">
             <h3>Udacity Map Project</h3>
             <div class="form-group">
                 <input type="text" class="form-control"  id="input-text"  placeholder="请在这里输入地址" data-bind="value: searchText">
+                <a class="glyphicon glyphicon-remove btn form-control-feedback"style="pointer-events: auto"></a>
                 <button type="button" data-bind="text:'filter',click:filter" class="btn btn-info"></button>
             </div>   
         </div>
