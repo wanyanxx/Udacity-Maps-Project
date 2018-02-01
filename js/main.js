@@ -97,7 +97,35 @@ var PlaceViewModel = function () {
             zoom: 13,
         });
     }
-    function showInfowindow(marker, infowindow) {
+
+    function showInfowindow(placeItem, infowindow) {
+        var wikipediaUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + placeItem + '&format=json&callback=wikiCallback';
+        //错误提示
+        var wikiRequestTimeout = setTimeout(function () {
+            infowindow.setContent('failed to get wikipedia resource');
+        }, 8000);
+        $.ajax({
+            url: wikipediaUrl,
+            dataType: "jsonp",
+            success: function (response) {
+                var wikiElem = '';
+                var articleList = response[1];
+                if (articleList.length != 0) {
+                    for (var i = 0; i < articleList.length; i++) {
+                        var articleStr = articleList[i];
+                        var url = 'https://en.wikipedia.org/wiki/' + articleStr;
+                        wikiElem += '<li><a href="' + url + '">' + articleStr + '</a></li>';
+                    };
+                    infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');
+                    infowindow.open(map, placeItem);
+                } else {
+                    infowindow.setContent('div' + marker.title + '</div>' + '<h3>No Wikipedia Link Found</h3>')
+                }
+                clearTimeout(wikiRequestTimeout);
+            }
+        })
+    }
+    /* function showInfowindow(marker, infowindow) {
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
             infowindow.setContent('');
@@ -128,7 +156,7 @@ var PlaceViewModel = function () {
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
             infowindow.open(map, marker);
         };
-    };
+    }; */
     function addMarkers(places) {
         var myObservableArray = ko.observableArray();
         places.forEach(function (place) {
@@ -151,8 +179,6 @@ var PlaceViewModel = function () {
             });
         })
     }
-
-
     //显示地图
     initMap();
     //显示markers
@@ -161,4 +187,4 @@ var PlaceViewModel = function () {
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
 }
-//错误提示
+
