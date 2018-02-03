@@ -71,6 +71,20 @@ var PlaceViewModel = function () {
         }
     };
 
+    this.hidden = function(){
+        //console.log('1');
+        var menu = $('.options-box');
+        if (menu.hasClass("show-nav")) {
+            setTimeout(function () {
+                menu.addClass("hide-nav").removeClass("show-nav");
+            }, 100)
+        }
+        else {
+            setTimeout(function (){
+                menu.addClass("show-nav").removeClass("hide-nav");
+            }, 100)
+        }
+    };
     function addItemMarkers(place) {
         var position = place.location;
         var title = place.title;
