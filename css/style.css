@@ -6,54 +6,69 @@ html,body
     margin: 0;
     padding: 0;
   }
-  .h3{
-    margin-top: 0px;
-  }
-  #icon-menu{
-      display: block;
-      background: rgba(255, 253, 253, 0.8);
-      position: absolute;
-      top: 60px;
-      bottom: 0;
-      z-index:1;
-      width: 100%;
-  }
-  #map {
-    bottom:0px;
-    height: 100%;
-    left: 0px;
-    position: absolute;
-    right: 0px;
-    z-index: -1
-  }
- .header{
+  .header{
     background-color: #1e1e1e;
     height: 60px;
-    position: relative;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
  }
-  .icon{
-    padding: 20px 0px 0px 10px;   
-  } 
-  .options-box {
-    background: #FDFCFC;
-    border-radius: 3px;
-    height: 100%;
-    line-height: 35px;
-    padding: 10px 10px 30px 10px;
-    text-align: left;
-    width: 340px;
-  }   
+ a{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 1.5em;
+   color: white;
+   position:absolute;
+   top:20px;
+   left: 60px;
+ }
+ .icon{
+  padding: 5px 5px 5px 5px; 
+  border: 2px solid #141414;
+  position:absolute;
+  top:13px;
+  left: 10px; 
+} 
+
+.options-box {
+  background: #FDFCFC;
+  border-radius: 3px;   
+  line-height: 35px;
+  padding: 10px 10px 30px 10px;
+  text-align: left;
+  width: 360px; 
+  z-index: 1;
+  position: absolute;
+  top: 60px;
+}  
+.btn-info{
+  background: #00a0e9;
+  height: 40px;
+  width: 60px;
+  border: none;
+  font-size: 1em;
+
+} 
   #input-text{
       width: 70%;
       display: inline-block;
+      height: 40px;
   }
   #pano{
       width: 200px;
       height:200px;
   }
-  .icon-list {
-    font-size: 1.5em;
-    color: #248CE2;
-}
+  #map {
+    top:0px;
+    height: 100%;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+  }
   .show-nav {transform:translateX(0);}
-  .hide-nav {transform:translateX(-360px);}
+  .hide-nav {transform:translateX(-100%);}
+@media screen and (max-width:750px){
+  body .options-box{
+    width:60%
+  }
+   
+}

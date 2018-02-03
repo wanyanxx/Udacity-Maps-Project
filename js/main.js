@@ -77,11 +77,13 @@ var PlaceViewModel = function () {
         if (menu.hasClass("show-nav")) {
             setTimeout(function () {
                 menu.addClass("hide-nav").removeClass("show-nav");
-            }, 100)
+                document.getElementsByClassName('icon')[0].src="img/menu.png";
+                }, 100)
         }
         else {
             setTimeout(function (){
                 menu.addClass("show-nav").removeClass("hide-nav");
+                document.getElementsByClassName('icon')[0].src="img/menu1.png";
             }, 100)
         }
     };
@@ -117,7 +119,8 @@ var PlaceViewModel = function () {
         //错误提示
         var wikiRequestTimeout = setTimeout(function () {
             infowindow.setContent('failed to get wikipedia resource');
-        }, 8000);
+        }, 6000);
+        infowindow.open(map, placeItem);
         $.ajax({
             url: wikipediaUrl,
             dataType: "jsonp",
@@ -130,8 +133,7 @@ var PlaceViewModel = function () {
                         var url = 'https://en.wikipedia.org/wiki/' + articleStr;
                         wikiElem += '<li><a href="' + url + '">' + articleStr + '</a></li>';
                     };
-                    infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');
-                    infowindow.open(map, placeItem);
+                    infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');                   
                 } else {
                     infowindow.setContent('div' + marker.title + '</div>' + '<h3>No Wikipedia Link Found</h3>')
                 }
@@ -139,38 +141,7 @@ var PlaceViewModel = function () {
             }
         })
     }
-    /* function showInfowindow(marker, infowindow) {
-        if (infowindow.marker != marker) {
-            infowindow.marker = marker;
-            infowindow.setContent('');
-            infowindow.open(map, marker);
 
-            var streetViewService = new google.maps.StreetViewService();
-            var radius = 50;
-            function getStreetView(data, status) {
-                if (status == google.maps.StreetViewStatus.OK) {
-                    var nearStreetViewLocation = data.location.latLng;
-                    var heading = google.maps.geometry.spherical.computeHeading(
-                        nearStreetViewLocation, marker.position
-                    );
-                    infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-                    var panoOptions = {
-                        position: nearStreetViewLocation,
-                        pov: {
-                            heading: heading,
-                            pitch: 30.
-                        }
-                    };
-                    var panorama = new google.maps.StreetViewPanorama(
-                        document.getElementById('pano'), panoOptions);
-                } else {
-                    infowindow.setContent('div' + marker.title + '</div>' + '<div>No Street View Found</div>');
-                }
-            }
-            streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-            infowindow.open(map, marker);
-        };
-    }; */
     function addMarkers(places) {
         var myObservableArray = ko.observableArray();
         places.forEach(function (place) {
