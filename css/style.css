@@ -67,8 +67,10 @@ html,body
   .show-nav {transform:translateX(0);}
   .hide-nav {transform:translateX(-100%);}
 @media screen and (max-width:750px){
-  body .options-box{
-    width:60%
+  body{
+    font-size: 12px;
   }
-   
+  body .options-box{
+    width:60%;
+  }  
 }
