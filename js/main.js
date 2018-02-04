@@ -33,7 +33,34 @@ var PlaceViewModel = function () {
     initialPlaces.forEach(function (placeItem) {
         self.placeList.push(new Place(placeItem))
     })
-    this.filter = function () {
+    this.filter = function(){
+        var inputText = this.searchText().toLocaleLowerCase();
+        
+        if(inputText !=''){
+            self.placeList([]);
+            for(var i=0;i<initialPlaces.length;i++){
+                console.log('1');
+                var placeItemTitle = initialPlaces[i].title.toLocaleLowerCase();
+                if(placeItemTitle.indexOf(inputText) !== -1){
+                    self.placeList.push(initialPlaces[i]);
+                    for(var j=0;j<self.markerList().length;j++){
+                        if(initialPlaces[i].id != self.markerList()[j].id){
+                            self.markerList()[j].setVisible(false);
+                        }
+                    }
+                }
+            }
+        }else{
+            self.placeList([]);
+            initialPlaces.forEach(function (placeItem) {
+                self.placeList.push(new Place(placeItem))
+            });
+            for (let i = 0; i < self.markerList().length; i++) {
+                self.markerList()[i].setVisible(true);
+            }
+        } 
+    }
+    /* this.filter = function () {
         var inputText = this.searchText();
         if (inputText != '') {
             self.placeList([]);
@@ -56,7 +83,7 @@ var PlaceViewModel = function () {
                 self.markerList()[i].setVisible(true);
             }
         }
-    }
+    } */
     //点击place列表，使得marker跳动并显示infowindow
     this.placeClick = function (place) {
         for (var i = 0; i < self.markerList().length; i++) {
