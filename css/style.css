@@ -27,9 +27,13 @@ html,body
   position:absolute;
   top:13px;
   left: 10px; 
+  background: 'img/menu1.png'
 } 
 
-.options-box {
+.menu {
+  
+  transition: all .3s ease-in-out;
+  transform: translateX(0); 
   background: #FDFCFC;
   border-radius: 3px;   
   line-height: 35px;
@@ -39,6 +43,7 @@ html,body
   z-index: 1;
   position: absolute;
   top: 60px;
+  src:"img/menu1.png";
 }  
 .btn-info{
   background: #00a0e9;
@@ -64,8 +69,8 @@ html,body
     position: absolute;
     right: 0px;
   }
-  .show-nav {transform:translateX(0);}
-  .hide-nav {transform:translateX(-100%);}
+/*   .show-nav {transform:translateX(0);}
+  .hide-nav {transform:translateX(-100%);} */
 @media screen and (max-width:750px){
   body{
     font-size: 12px;

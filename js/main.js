@@ -28,8 +28,14 @@ var PlaceViewModel = function () {
     self.markerList = ko.observableArray();
     this.id = ko.observableArray();
     this.searchText = ko.observable('');
+
+    this.currentProft=ko.observable(true);
+    this.iconStatus =function(){
+
+    }
     //获取place列表
     this.placeList = ko.observableArray();
+
     initialPlaces.forEach(function (placeItem) {
         self.placeList.push(new Place(placeItem))
     })
@@ -41,10 +47,11 @@ var PlaceViewModel = function () {
                 console.log('1');
                 var placeItemTitle = initialPlaces[i].title.toLocaleLowerCase();
                 if(placeItemTitle.indexOf(inputText) !== -1){
-                    self.placeList.push(initialPlaces[i]);
-                    //initialPlaces[i].marker.setVisible(true);
+                    self.placeList.push(initialPlaces[i]);  
+                    initialPlaces[i].marker.setVisible(true);
                 }else{
-                   // initialPlaces[i].marker.setVisible(false);
+                   console.log(initialPlaces[i].marker);
+                   initialPlaces[i].marker.setVisible(false);
                 }}
             }else{
             self.placeList([]);
@@ -73,19 +80,15 @@ var PlaceViewModel = function () {
     };
 
     this.hidden = function(){
-        //console.log('1');
-        var menu = $('.options-box');
-        if (menu.hasClass("show-nav")) {
-            setTimeout(function () {
-                menu.addClass("hide-nav").removeClass("show-nav");
-                document.getElementsByClassName('icon')[0].src="img/menu.png";
-                }, 100)
-        }
-        else {
-            setTimeout(function (){
-                menu.addClass("show-nav").removeClass("hide-nav");
-                document.getElementsByClassName('icon')[0].src="img/menu1.png";
-            }, 100)
+        var menu = document.getElementsByClassName('menu')[0];
+        var icon = document.getElementsByClassName('icon')[0]
+        var tranformX = window.getComputedStyle(menu).transform.split('(')[1].split(')')[0].split(',')[4];
+        if (tranformX < 0) {
+            menu.style.transform = "translateX(0)";
+            icon.src="img/menu1.png";
+        } else {
+            menu.style.transform = "translateX(-100%)";
+            icon.src="img/menu.png";
         }
     };
     function addItemMarkers(place) {
@@ -148,12 +151,13 @@ var PlaceViewModel = function () {
         places.forEach(function (place) {
             var position = place.location;
             var title = place.title;
+            var id = place.id;
             var marker = new google.maps.Marker({
                 map: map,
                 position: position,
                 title: title,
                 animation: google.maps.Animation.DROP,
-                id: place.id,
+                id: id,
             });
             self.markerList.push(marker);
             marker.addListener("click", function () {
@@ -169,6 +173,7 @@ var PlaceViewModel = function () {
     initMap();
     //显示markers
     addMarkers(initialPlaces);
+    self.places(initialPlaces);
 }
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
