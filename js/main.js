@@ -103,11 +103,12 @@ var PlaceViewModel = function () {
     }
 
     function showInfowindow(placeItem, infowindow) {
+        //var wikipediaUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + encodeURIComponent(placeItem.title) + '&format=json&callback=wikiCallback&profile=fuzzy';
         var wikipediaUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + placeItem + '&format=json&callback=wikiCallback';
         //错误提示
-        var wikiRequestTimeout = setTimeout(function () {
+        /* var wikiRequestTimeout = setTimeout(function () {
             infowindow.setContent('failed to get wikipedia resource');
-        }, 6000);
+        }, 6000); */
         infowindow.open(map, placeItem);
         $.ajax({
             url: wikipediaUrl,
@@ -123,9 +124,13 @@ var PlaceViewModel = function () {
                     };
                     infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');
                 } else {
-                    infowindow.setContent('div' + marker.title + '</div>' + '<h3>No Wikipedia Link Found</h3>')
+                    infowindow.setContent('div' + placeItem.title + '</div>' + '<h3>No Wikipedia Link Found</h3>')
                 }
-                clearTimeout(wikiRequestTimeout);
+                //clearTimeout(wikiRequestTimeout);
+            },
+            timeout: 6000,
+            error: function(){
+                infowindow.setContent('Failed to get wikipedia resource');
             }
         })
     }
