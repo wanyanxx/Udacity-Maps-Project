@@ -29,42 +29,39 @@ var PlaceViewModel = function () {
     this.id = ko.observableArray();
     this.searchText = ko.observable('');
 
-    this.currentProft=ko.observable(true);
-    this.iconStatus =function(){
-
-    }
     //获取place列表
     this.placeList = ko.observableArray();
-
     initialPlaces.forEach(function (placeItem) {
         self.placeList.push(new Place(placeItem))
-    })
-    this.filter = function(){
+    });
+
+    this.filter = function () {
         var inputText = this.searchText().toLocaleLowerCase();
-        if(inputText !=''){
+        if (inputText != '') {
             self.placeList([]);
-            for(var i=0;i<initialPlaces.length;i++){
+            for (var i = 0; i < initialPlaces.length; i++) {
                 console.log('1');
                 var placeItemTitle = initialPlaces[i].title.toLocaleLowerCase();
-                if(placeItemTitle.indexOf(inputText) !== -1){
-                    self.placeList.push(initialPlaces[i]);  
-                    initialPlaces[i].marker.setVisible(true);
-                }else{
-                   console.log(initialPlaces[i].marker);
-                   initialPlaces[i].marker.setVisible(false);
-                }}
-            }else{
+                if (placeItemTitle.indexOf(inputText) !== -1) {
+                    self.placeList.push(initialPlaces[i]);
+                    self.markerList()[i].marker.setVisible(true);
+                } else {
+                    console.log(self.markerList()[i].title);
+                    self.markerList()[i].marker.setVisible(false);
+                }
+            }
+        } else {
             self.placeList([]);
             initialPlaces.forEach(function (placeItem) {
                 self.placeList.push(new Place(placeItem))
             });
-            for (let i = 0; i < self.markerList().length; i++) {
-                self.markerList()[i].setVisible(true);
-            }
-        } 
+            self.markerList().forEach(function (place) {
+                place.marker.setVisible(true);
+              });
+        }
     }
-    
-     
+
+
     //点击place列表，使得marker跳动并显示infowindow
     this.placeClick = function (place) {
         for (var i = 0; i < self.markerList().length; i++) {
@@ -79,36 +76,18 @@ var PlaceViewModel = function () {
         }
     };
 
-    this.hidden = function(){
+    this.hidden = function () {
         var menu = document.getElementsByClassName('menu')[0];
         var icon = document.getElementsByClassName('icon')[0]
         var tranformX = window.getComputedStyle(menu).transform.split('(')[1].split(')')[0].split(',')[4];
         if (tranformX < 0) {
             menu.style.transform = "translateX(0)";
-            icon.src="img/menu1.png";
+            icon.src = "img/menu1.png";
         } else {
             menu.style.transform = "translateX(-100%)";
-            icon.src="img/menu.png";
+            icon.src = "img/menu.png";
         }
     };
-    function addItemMarkers(place) {
-        var position = place.location;
-        var title = place.title;
-        var marker = new google.maps.Marker({
-            map: map,
-            position: position,
-            title: title,
-            animation: google.maps.Animation.DROP,
-        });
-        // self.markers.push(marker);
-        marker.addListener("click", function () {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            showInfowindow(marker, infowindow);
-            setTimeout(function () {
-                marker.setAnimation(null);
-            }.bind(marker), 1400)
-        });
-    }
 
     function initMap() {
         // Constructor creates a new map - only center and zoom are required.
@@ -116,6 +95,11 @@ var PlaceViewModel = function () {
             center: { lat: 40.7413549, lng: -73.9980244 },
             zoom: 13,
         });
+
+        infowindow = new google.maps.InfoWindow({ maxWidth: 300 });
+        self.places(initialPlaces);
+        //显示markers
+        addMarkers(initialPlaces);
     }
 
     function showInfowindow(placeItem, infowindow) {
@@ -137,7 +121,7 @@ var PlaceViewModel = function () {
                         var url = 'https://en.wikipedia.org/wiki/' + articleStr;
                         wikiElem += '<li><a href="' + url + '">' + articleStr + '</a></li>';
                     };
-                    infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');                   
+                    infowindow.setContent('<div>' + placeItem.title + '</div><h3>Wikipedia Links</h3><ul>' + wikiElem + '</ul>');
                 } else {
                     infowindow.setContent('div' + marker.title + '</div>' + '<h3>No Wikipedia Link Found</h3>')
                 }
@@ -159,7 +143,7 @@ var PlaceViewModel = function () {
                 animation: google.maps.Animation.DROP,
                 id: id,
             });
-            self.markerList.push(marker);
+            self.markerList.push({marker:marker});
             marker.addListener("click", function () {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 showInfowindow(marker, infowindow);
@@ -171,10 +155,9 @@ var PlaceViewModel = function () {
     }
     //显示地图
     initMap();
-    //显示markers
-    addMarkers(initialPlaces);
-    self.places(initialPlaces);
+
 }
+
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
 }
