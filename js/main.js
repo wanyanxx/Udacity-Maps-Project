@@ -35,7 +35,6 @@ var PlaceViewModel = function () {
     })
     this.filter = function(){
         var inputText = this.searchText().toLocaleLowerCase();
-        
         if(inputText !=''){
             self.placeList([]);
             for(var i=0;i<initialPlaces.length;i++){
@@ -43,14 +42,11 @@ var PlaceViewModel = function () {
                 var placeItemTitle = initialPlaces[i].title.toLocaleLowerCase();
                 if(placeItemTitle.indexOf(inputText) !== -1){
                     self.placeList.push(initialPlaces[i]);
-                    for(var j=0;j<self.markerList().length;j++){
-                        if(initialPlaces[i].id != self.markerList()[j].id){
-                            self.markerList()[j].setVisible(false);
-                        }
-                    }
-                }
-            }
-        }else{
+                    //initialPlaces[i].marker.setVisible(true);
+                }else{
+                   // initialPlaces[i].marker.setVisible(false);
+                }}
+            }else{
             self.placeList([]);
             initialPlaces.forEach(function (placeItem) {
                 self.placeList.push(new Place(placeItem))
@@ -60,30 +56,8 @@ var PlaceViewModel = function () {
             }
         } 
     }
-    /* this.filter = function () {
-        var inputText = this.searchText();
-        if (inputText != '') {
-            self.placeList([]);
-            for (var i = 0; i < initialPlaces.length; i++) {
-                if (initialPlaces[i].title == inputText) {
-                    self.placeList.push(initialPlaces[i]);
-                    for (var j = 0; j < self.markerList().length; j++) {
-                        if (initialPlaces[i].id !== self.markerList()[j].id) {
-                            self.markerList()[j].setVisible(false);
-                        }
-                    }
-                }
-            }
-        } else if (inputText == '') {
-            self.placeList([]);
-            initialPlaces.forEach(function (placeItem) {
-                self.placeList.push(new Place(placeItem))
-            })
-            for (let i = 0; i < self.markerList().length; i++) {
-                self.markerList()[i].setVisible(true);
-            }
-        }
-    } */
+    
+     
     //点击place列表，使得marker跳动并显示infowindow
     this.placeClick = function (place) {
         for (var i = 0; i < self.markerList().length; i++) {
