@@ -36,6 +36,7 @@ var PlaceViewModel = function () {
     });
 
     this.filter = function () {
+        infowindow.close();
         var inputText = this.searchText().toLocaleLowerCase();
         if (inputText != '') {
             self.placeList([]);
@@ -166,4 +167,7 @@ var PlaceViewModel = function () {
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
 }
+var mapErrorHandler = function(){
+    alert('Failed to load the Google map,plaese try again!');
+   }
 
