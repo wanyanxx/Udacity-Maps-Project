@@ -65,10 +65,12 @@ var PlaceViewModel = function () {
 
     //点击place列表，使得marker跳动并显示infowindow
     this.placeClick = function (place) {
+        
         for (var i = 0; i < self.markerList().length; i++) {
-            if (self.markerList()[i].id == place.id) {
-                var that = self.markerList()[i];
-                self.markerList()[i].setAnimation(google.maps.Animation.BOUNCE);
+            var marker = self.markerList()[i].marker;
+            if (marker.id == place.id) {
+                var that = marker;
+                marker.setAnimation(google.maps.Animation.BOUNCE);
                 showInfowindow(that, infowindow);
                 setTimeout(function () {
                     that.setAnimation(null);
