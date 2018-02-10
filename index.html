@@ -10,10 +10,10 @@
 </head>
 <body>
         <div class="header">
-            <img class="icon" src="img/menu1.png" data-bind="click:hidden">
+            <img class="icon" data-bind="attr:{src:url},click:hidden">
             <a>Udacity Map Projects</a>
         </div>
-        <div class="menu ">
+        <div class="menu" data-bind="style: {transform: isShowing() ? 'translateX(0)' : 'translateX(-100%)'}">
             <div class="filter">
                 <input type="search" class="input" id="input-text" placeholder="请在这里输入地址" data-bind="value: searchText">
                 <!-- <a class="glyphicon glyphicon-remove btn form-control-feedback" style="pointer-events: auto"></a> -->

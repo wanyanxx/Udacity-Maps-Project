@@ -35,6 +35,18 @@ var PlaceViewModel = function () {
         self.placeList.push(new Place(placeItem))
     });
 
+    this.url = ko.observable("img/menu1.png");
+    this.isShowing = ko.observable(true);
+    this.hidden = function () {
+        self.isShowing(!self.isShowing());
+        if (self.url() == 'img/menu1.png') {
+            self.url('img/menu.png');
+        } else {
+            self.url('img/menu1.png');
+        }
+    }
+
+
     this.filter = function () {
         infowindow.close();
         var inputText = this.searchText().toLocaleLowerCase();
@@ -58,14 +70,14 @@ var PlaceViewModel = function () {
             });
             self.markerList().forEach(function (place) {
                 place.marker.setVisible(true);
-              });
+            });
         }
     }
 
 
     //点击place列表，使得marker跳动并显示infowindow
     this.placeClick = function (place) {
-        
+
         for (var i = 0; i < self.markerList().length; i++) {
             var marker = self.markerList()[i].marker;
             if (marker.id == place.id) {
@@ -76,19 +88,6 @@ var PlaceViewModel = function () {
                     that.setAnimation(null);
                 }.bind(that), 1400)
             }
-        }
-    };
-
-    this.hidden = function () {
-        var menu = document.getElementsByClassName('menu')[0];
-        var icon = document.getElementsByClassName('icon')[0]
-        var tranformX = window.getComputedStyle(menu).transform.split('(')[1].split(')')[0].split(',')[4];
-        if (tranformX < 0) {
-            menu.style.transform = "translateX(0)";
-            icon.src = "img/menu1.png";
-        } else {
-            menu.style.transform = "translateX(-100%)";
-            icon.src = "img/menu.png";
         }
     };
 
@@ -132,7 +131,7 @@ var PlaceViewModel = function () {
                 //clearTimeout(wikiRequestTimeout);
             },
             timeout: 6000,
-            error: function(){
+            error: function () {
                 infowindow.setContent('Failed to get wikipedia resource');
             }
         })
@@ -151,7 +150,7 @@ var PlaceViewModel = function () {
                 animation: google.maps.Animation.DROP,
                 id: id,
             });
-            self.markerList.push({marker:marker});
+            self.markerList.push({ marker: marker });
             marker.addListener("click", function () {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 showInfowindow(marker, infowindow);
@@ -169,7 +168,7 @@ var PlaceViewModel = function () {
 function initPage() {
     ko.applyBindings(new PlaceViewModel());
 }
-var mapErrorHandler = function(){
+var mapErrorHandler = function () {
     alert('Failed to load the Google map,plaese try again!');
-   }
+}
 
